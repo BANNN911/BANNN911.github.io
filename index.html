@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasteland Dev | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Палітра Пустки */
+            --oil-black: #0f0f0f;
+            --dust-sand: #e6c288;
+            --rust-orange: #d35400;
+            --chrome: #7f8c8d;
+            --war-red: #c0392b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--oil-black);
+            color: var(--dust-sand);
+            font-family: 'Share Tech Mono', monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.8), #000),
+                repeating-linear-gradient(45deg, #111 0, #111 2px, #0f0f0f 2px, #0f0f0f 4px);
+        }
+
+        /* Ефект "шуму" на фоні */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Типографіка */
+        h1, h2, h3 {
+            font-family: 'Black Ops One', cursive;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            color: var(--rust-orange);
+            text-shadow: 4px 4px 0px #000;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            border-bottom: 3px solid var(--rust-orange);
+            display: inline-block;
+            margin-bottom: 30px;
+            padding-right: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header Section */
+        header {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 2px solid var(--chrome);
+            margin: 20px 0;
+            position: relative;
+            /* Зрізані кути */
+            clip-path: polygon(
+                20px 0, 100% 0, 
+                100% calc(100% - 20px), calc(100% - 20px) 100%, 
+                0 100%, 0 20px
+            );
+            background: rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--chrome);
+            margin-bottom: 2rem;
+        }
+
+        /* Кнопки в стилі War Boys */
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--rust-orange);
+            color: #000;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: 'Black Ops One', cursive;
+            border: 2px solid var(--rust-orange);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin: 10px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: var(--rust-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--rust-orange);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--dust-sand);
+            border: 2px solid var(--dust-sand);
+        }
+
+        .btn-outline:hover {
+            background: var(--dust-sand);
+            color: #000;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .project-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid var(--chrome);
+            padding: 20px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .project-card:hover {
+            border-color: var(--rust-orange);
+            background: rgba(30, 30, 30, 0.9);
+        }
+
+        .project-card::after {
+            content: "V8";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: #333;
+            font-family: 'Black Ops One';
+            border: 1px solid #333;
+            padding: 2px 5px;
+        }
+
+        .tech-stack {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--chrome);
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background: #222;
+            padding: 2px 8px;
+            margin-right: 5px;
+            border-left: 2px solid var(--rust-orange);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 50px 0;
+            border-top: 1px dashed var(--chrome);
+            color: var(--chrome);
+        }
+
+        /* Анімація "дихання" для заголовка */
+        @keyframes engine-throb {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .hero-title {
+            animation: engine-throb 3s infinite ease-in-out;
+        }
+
+        /* Мобільна адаптація */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            header { clip-path: none; border: none; border-bottom: 2px solid var(--chrome); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header>
+            <h1 class="hero-title">WITNESS ME</h1>
+            <p class="subtitle">Full Stack Developer | Wasteland Survivor</p>
+            <div>
+                <a href="#projects" class="btn">Мої Проекти</a>
+                <a href="https://github.com/yourusername" target="_blank" class="btn btn-outline">GitHub</a>
+            </div>
+        </header>
+
+        <section id="about" style="margin-bottom: 60px;">
+            <h2>ПРО СЕБЕ</h2>
+            <p style="font-size: 1.1rem; max-width: 800px;">
+                Я створюю код, який виживає в будь-яких умовах. Чистий, швидкий, безжальний до багів. 
+                Моя спеціалізація — перетворення хаосу ідей на надійні механізми вебу.
+                HTML5, CSS3, JS та Python — це моє паливо.
+            </p>
+        </section>
+
+        <section id="projects">
+            <h2>АРСЕНАЛ (ПРОЕКТИ)</h2>
+            <div class="projects-grid">
+                
+                <article class="project-card">
+                    <h3>Interceptor Bot</h3>
+                    <p>Telegram бот для автоматизації процесів. Швидкий як V8, надійний як лом.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Aiogram</span>
+                        <span class="tech-tag">Docker</span>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <h3>Thunderdome UI</h3>
+                    <p>Веб-інтерфейс для дашборду. Адаптивний дизайн, React компоненти.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">CSS Grid</span>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <h3>Scrap Scraper</h3>
+                    <p>Скрипт для збору даних з сайтів. Знаходить цінне в купі сміття.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Puppeteer</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026. RIDE ETERNAL, SHINY AND CHROME.</p>
+            <p>Створено для GitHub Pages</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
