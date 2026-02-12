@@ -10,7 +10,6 @@
     
     <style>
         :root {
-            /* Палітра Пустки */
             --oil-black: #0f0f0f;
             --dust-sand: #e6c288;
             --rust-orange: #d35400;
@@ -33,9 +32,10 @@
             background-image: 
                 radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.8), #000),
                 repeating-linear-gradient(45deg, #111 0, #111 2px, #0f0f0f 2px, #0f0f0f 4px);
+            position: relative;
         }
 
-        /* Ефект "шуму" на фоні */
+        /* Шум на фоні */
         body::before {
             content: "";
             position: fixed;
@@ -45,13 +45,31 @@
             z-index: -1;
         }
 
+        /* --- НОВА АНІМАЦІЯ: Лінія сканування (CRT ефект) --- */
+        .scanline {
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to bottom, rgba(211, 84, 0, 0), rgba(211, 84, 0, 0.1), rgba(211, 84, 0, 0));
+            position: fixed;
+            top: -10px;
+            left: 0;
+            z-index: 9999;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes scan {
+            0% { top: -10px; }
+            100% { top: 100vh; }
+        }
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Типографіка */
         h1, h2, h3 {
             font-family: 'Black Ops One', cursive;
             text-transform: uppercase;
@@ -61,8 +79,9 @@
         h1 {
             font-size: 4rem;
             color: var(--rust-orange);
-            text-shadow: 4px 4px 0px #000;
+            /* Тінь прибрана, бо вона конфліктує з глітч-ефектом */
             margin-bottom: 10px;
+            position: relative;
         }
 
         h2 {
@@ -73,12 +92,8 @@
             padding-right: 20px;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        a { text-decoration: none; color: inherit; }
 
-        /* Header Section */
         header {
             min-height: 90vh;
             display: flex;
@@ -89,12 +104,7 @@
             border: 2px solid var(--chrome);
             margin: 20px 0;
             position: relative;
-            /* Зрізані кути */
-            clip-path: polygon(
-                20px 0, 100% 0, 
-                100% calc(100% - 20px), calc(100% - 20px) 100%, 
-                0 100%, 0 20px
-            );
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
             background: rgba(0,0,0,0.5);
         }
 
@@ -104,7 +114,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Кнопки в стилі War Boys */
         .btn {
             display: inline-block;
             padding: 15px 30px;
@@ -124,7 +133,7 @@
             background: transparent;
             color: var(--rust-orange);
             transform: translateY(-3px);
-            box-shadow: 0 0 15px var(--rust-orange);
+            box-shadow: 0 0 25px rgba(211, 84, 0, 0.4); /* Додано світіння */
         }
 
         .btn-outline {
@@ -138,7 +147,6 @@
             color: #000;
         }
 
-        /* Projects Section */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -157,54 +165,84 @@
         .project-card:hover {
             border-color: var(--rust-orange);
             background: rgba(30, 30, 30, 0.9);
+            /* Додаємо легкий нахил при наведенні для динаміки */
+            transform: scale(1.02) rotate(1deg);
         }
 
         .project-card::after {
             content: "V8";
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 0.8rem;
-            color: #333;
+            top: 10px; right: 10px;
+            font-size: 0.8rem; color: #333;
             font-family: 'Black Ops One';
-            border: 1px solid #333;
-            padding: 2px 5px;
+            border: 1px solid #333; padding: 2px 5px;
         }
 
         .tech-stack {
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: var(--chrome);
+            margin-top: 15px; font-size: 0.9rem; color: var(--chrome);
         }
 
         .tech-tag {
-            display: inline-block;
-            background: #222;
-            padding: 2px 8px;
-            margin-right: 5px;
+            display: inline-block; background: #222; padding: 2px 8px; margin-right: 5px;
             border-left: 2px solid var(--rust-orange);
         }
 
-        /* Footer */
         footer {
-            text-align: center;
-            padding: 50px 0;
-            border-top: 1px dashed var(--chrome);
-            color: var(--chrome);
+            text-align: center; padding: 50px 0;
+            border-top: 1px dashed var(--chrome); color: var(--chrome);
         }
 
-        /* Анімація "дихання" для заголовка */
-        @keyframes engine-throb {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.02); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
+        /* --- НОВА АНІМАЦІЯ: GLITCH EFFECT для заголовка --- */
+        /* Цей ефект створює псевдо-елементи, які смикаються */
+        .hero-title-glitch {
+            position: relative;
+            display: inline-block;
         }
 
-        .hero-title {
-            animation: engine-throb 3s infinite ease-in-out;
+        .hero-title-glitch::before,
+        .hero-title-glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
         }
 
-        /* Мобільна адаптація */
+        /* Перший шар - колір іржі, зміщений трохи вліво */
+        .hero-title-glitch::before {
+            color: var(--rust-orange);
+            z-index: -1;
+            animation: glitch-anim-1 3s infinite linear alternate-reverse;
+        }
+
+        /* Другий шар - брудний хром, зміщений трохи вправо */
+        .hero-title-glitch::after {
+            color: #555; /* Темний хром */
+            z-index: -2;
+            animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+        }
+
+        /* Ключові кадри для смикання тексту. Вони створюють ефект "поганого контакту" */
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(10% 0 90% 0); transform: translate(-2px, 0); }
+            20% { clip-path: inset(50% 0 10% 0); transform: translate(2px, 0); }
+            40% { clip-path: inset(30% 0 60% 0); transform: translate(-3px, 0); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(3px, 0); }
+            80% { clip-path: inset(15% 0 75% 0); transform: translate(-2px, 0); }
+            100% { clip-path: inset(40% 0 20% 0); transform: translate(2px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(30% 0 10% 0); transform: translate(3px, 0); }
+            20% { clip-path: inset(60% 0 30% 0); transform: translate(-3px, 0); }
+            40% { clip-path: inset(10% 0 80% 0); transform: translate(2px, 0); }
+            60% { clip-path: inset(75% 0 15% 0); transform: translate(-2px, 0); }
+            80% { clip-path: inset(20% 0 50% 0); transform: translate(3px, 0); }
+            100% { clip-path: inset(50% 0 25% 0); transform: translate(-3px, 0); }
+        }
+
+
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             header { clip-path: none; border: none; border-bottom: 2px solid var(--chrome); }
@@ -212,11 +250,12 @@
     </style>
 </head>
 <body>
+    <div class="scanline"></div>
 
     <div class="container">
         
         <header>
-            <h1 class="hero-title">WITNESS ME</h1>
+            <h1 class="hero-title-glitch" data-text="WITNESS ME">WITNESS ME</h1>
             <p class="subtitle">Full Stack Developer | Wasteland Survivor</p>
             <div>
                 <a href="#projects" class="btn">Мої Проекти</a>
