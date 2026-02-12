@@ -15,12 +15,20 @@
             --rust-orange: #d35400;
             --chrome: #7f8c8d;
             --war-red: #c0392b;
+            --shiny-chrome: #e0e0e0;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        /* 3. ЕФЕКТ ХРОМУ ПРИ ВИДІЛЕННІ ТЕКСТУ */
+        ::selection {
+            background: var(--shiny-chrome);
+            color: #000;
+            text-shadow: 0 0 8px var(--shiny-chrome);
         }
 
         body {
@@ -33,9 +41,15 @@
                 radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.8), #000),
                 repeating-linear-gradient(45deg, #111 0, #111 2px, #0f0f0f 2px, #0f0f0f 4px);
             position: relative;
+            /* 2. БАЗОВИЙ КУРСОР-ПРИЦІЛ */
+            cursor: crosshair;
         }
 
-        /* Шум на фоні */
+        /* Інтерактивний курсор для посилань */
+        a, button, .project-card, .btn {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23d35400" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="18"/><line x1="6" y1="12" x2="18" y2="12"/></svg>') 12 12, pointer;
+        }
+
         body::before {
             content: "";
             position: fixed;
@@ -45,29 +59,34 @@
             z-index: -1;
         }
 
-        /* --- НОВА АНІМАЦІЯ: Лінія сканування (CRT ефект) --- */
-        .scanline {
-            width: 100%;
-            height: 10px;
-            background: linear-gradient(to bottom, rgba(211, 84, 0, 0), rgba(211, 84, 0, 0.1), rgba(211, 84, 0, 0));
+        /* 1. ПАЛИВНИЙ БАГ (SCROLL BAR) */
+        #fuel-gauge-container {
             position: fixed;
-            top: -10px;
-            left: 0;
-            z-index: 9999;
-            pointer-events: none;
-            animation: scan 8s linear infinite;
-            opacity: 0.3;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: #222;
+            z-index: 10000;
+        }
+        #fuel-gauge-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--rust-orange), var(--war-red));
+            width: 0%;
+            box-shadow: 0 0 15px var(--rust-orange);
+            transition: width 0.1s ease-out;
         }
 
-        @keyframes scan {
-            0% { top: -10px; }
-            100% { top: 100vh; }
+        /* Scanline Animation */
+        .scanline {
+            width: 100%; height: 5px;
+            background: rgba(211, 84, 0, 0.1);
+            position: fixed; top: -10px; left: 0; z-index: 9999;
+            pointer-events: none;
+            animation: scan 6s linear infinite;
+            opacity: 0.2;
         }
+        @keyframes scan { 0% { top: -10px; } 100% { top: 100vh; } }
 
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 1000px; margin: 0 auto; padding: 20px;
         }
 
         h1, h2, h3 {
@@ -79,7 +98,6 @@
         h1 {
             font-size: 4rem;
             color: var(--rust-orange);
-            /* Тінь прибрана, бо вона конфліктує з глітч-ефектом */
             margin-bottom: 10px;
             position: relative;
         }
@@ -96,11 +114,7 @@
 
         header {
             min-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
             border: 2px solid var(--chrome);
             margin: 20px 0;
             position: relative;
@@ -108,80 +122,71 @@
             background: rgba(0,0,0,0.5);
         }
 
-        .subtitle {
-            font-size: 1.5rem;
-            color: var(--chrome);
-            margin-bottom: 2rem;
-        }
+        .subtitle { font-size: 1.5rem; color: var(--chrome); margin-bottom: 2rem; }
 
         .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: var(--rust-orange);
-            color: #000;
-            font-weight: bold;
-            text-transform: uppercase;
+            display: inline-block; padding: 15px 30px;
+            background: var(--rust-orange); color: #000;
+            font-weight: bold; text-transform: uppercase;
             font-family: 'Black Ops One', cursive;
             border: 2px solid var(--rust-orange);
             transition: all 0.3s ease;
-            cursor: pointer;
-            margin: 10px;
+            cursor: pointer; margin: 10px;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
 
         .btn:hover {
-            background: transparent;
-            color: var(--rust-orange);
+            background: transparent; color: var(--rust-orange);
             transform: translateY(-3px);
-            box-shadow: 0 0 25px rgba(211, 84, 0, 0.4); /* Додано світіння */
+            box-shadow: 0 0 25px rgba(211, 84, 0, 0.6);
         }
 
         .btn-outline {
-            background: transparent;
-            color: var(--dust-sand);
+            background: transparent; color: var(--dust-sand);
             border: 2px solid var(--dust-sand);
         }
-
-        .btn-outline:hover {
-            background: var(--dust-sand);
-            color: #000;
-        }
+        .btn-outline:hover { background: var(--dust-sand); color: #000; }
 
         .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px; margin-bottom: 50px;
         }
 
         .project-card {
             background: rgba(20, 20, 20, 0.8);
             border: 1px solid var(--chrome);
-            padding: 20px;
-            transition: 0.3s;
+            padding: 20px; transition: 0.3s;
             position: relative;
+            overflow: hidden; /* Важливо для ефекту бліка */
         }
 
         .project-card:hover {
             border-color: var(--rust-orange);
             background: rgba(30, 30, 30, 0.9);
-            /* Додаємо легкий нахил при наведенні для динаміки */
-            transform: scale(1.02) rotate(1deg);
+            transform: scale(1.02);
+        }
+
+        /* Ефект "бліка" на картках при наведенні */
+        .project-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+        .project-card:hover::before {
+            left: 100%;
         }
 
         .project-card::after {
             content: "V8";
-            position: absolute;
-            top: 10px; right: 10px;
-            font-size: 0.8rem; color: #333;
-            font-family: 'Black Ops One';
+            position: absolute; top: 10px; right: 10px;
+            font-size: 0.8rem; color: #333; font-family: 'Black Ops One';
             border: 1px solid #333; padding: 2px 5px;
         }
 
-        .tech-stack {
-            margin-top: 15px; font-size: 0.9rem; color: var(--chrome);
-        }
-
+        .tech-stack { margin-top: 15px; font-size: 0.9rem; color: var(--chrome); }
         .tech-tag {
             display: inline-block; background: #222; padding: 2px 8px; margin-right: 5px;
             border-left: 2px solid var(--rust-orange);
@@ -192,56 +197,34 @@
             border-top: 1px dashed var(--chrome); color: var(--chrome);
         }
 
-        /* --- НОВА АНІМАЦІЯ: GLITCH EFFECT для заголовка --- */
-        /* Цей ефект створює псевдо-елементи, які смикаються */
-        .hero-title-glitch {
-            position: relative;
-            display: inline-block;
+        /* Glitch Effect */
+        .hero-title-glitch { position: relative; display: inline-block; }
+        .hero-title-glitch::before, .hero-title-glitch::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; opacity: 0.8;
         }
-
-        .hero-title-glitch::before,
-        .hero-title-glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.8;
-        }
-
-        /* Перший шар - колір іржі, зміщений трохи вліво */
         .hero-title-glitch::before {
-            color: var(--rust-orange);
-            z-index: -1;
+            color: var(--rust-orange); z-index: -1;
             animation: glitch-anim-1 3s infinite linear alternate-reverse;
         }
-
-        /* Другий шар - брудний хром, зміщений трохи вправо */
         .hero-title-glitch::after {
-            color: #555; /* Темний хром */
-            z-index: -2;
+            color: #555; z-index: -2;
             animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
         }
 
-        /* Ключові кадри для смикання тексту. Вони створюють ефект "поганого контакту" */
         @keyframes glitch-anim-1 {
             0% { clip-path: inset(10% 0 90% 0); transform: translate(-2px, 0); }
             20% { clip-path: inset(50% 0 10% 0); transform: translate(2px, 0); }
             40% { clip-path: inset(30% 0 60% 0); transform: translate(-3px, 0); }
             60% { clip-path: inset(80% 0 5% 0); transform: translate(3px, 0); }
-            80% { clip-path: inset(15% 0 75% 0); transform: translate(-2px, 0); }
             100% { clip-path: inset(40% 0 20% 0); transform: translate(2px, 0); }
         }
         @keyframes glitch-anim-2 {
             0% { clip-path: inset(30% 0 10% 0); transform: translate(3px, 0); }
-            20% { clip-path: inset(60% 0 30% 0); transform: translate(-3px, 0); }
             40% { clip-path: inset(10% 0 80% 0); transform: translate(2px, 0); }
             60% { clip-path: inset(75% 0 15% 0); transform: translate(-2px, 0); }
-            80% { clip-path: inset(20% 0 50% 0); transform: translate(3px, 0); }
             100% { clip-path: inset(50% 0 25% 0); transform: translate(-3px, 0); }
         }
-
 
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
@@ -250,6 +233,8 @@
     </style>
 </head>
 <body>
+    <div id="fuel-gauge-container"><div id="fuel-gauge-bar"></div></div>
+    
     <div class="scanline"></div>
 
     <div class="container">
@@ -314,5 +299,13 @@
 
     </div>
 
+    <script>
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("fuel-gauge-bar").style.width = scrolled + "%";
+        };
+    </script>
 </body>
 </html>
